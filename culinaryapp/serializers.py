@@ -8,7 +8,7 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ['ingredient', 'quantity', 'quantity_description']
 
 class DishSerializer(serializers.ModelSerializer):
-    ingredients = IngredientSerializer(many=True)
+    dish_ingredients = IngredientSerializer(many=True)
     class Meta:
         model = Dish
-        fields = ['profile', 'receipe', 'ingredients']
+        fields = ['profile', 'title', 'receipe', 'dish_ingredients']

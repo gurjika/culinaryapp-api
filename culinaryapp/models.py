@@ -11,14 +11,15 @@ class Ingredient(models.Model):
     title = models.CharField(max_length=255)
 
 class Dish(models.Model):
+    title = models.CharField(max_length=255)
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='dishes')
     receipe = models.TextField()
-    ingredients = models.ManyToManyField(Ingredient, through='DishIngredient')
+    ingredient = models.ManyToManyField(Ingredient, through='DishIngredient')
     
 
 class DishIngredient(models.Model):
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='dishes')
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='dish_ingredients')
     quantity = models.FloatField()
     quantity_description = models.CharField(max_length=255)
 
