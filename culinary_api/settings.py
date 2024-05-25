@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'core',
     'culinaryapp',
-    'debug-toolbar',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +137,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
