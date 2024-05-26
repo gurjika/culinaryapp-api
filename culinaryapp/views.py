@@ -70,4 +70,21 @@ class IngredientViewSet(ModelViewSet):
     
 
 
-# class RatingViewSet(ModelViewSet):
+class RatingViewSet(ModelViewSet):
+    
+
+    def get_queryset(self):
+        rating = Rating.objects.filter(dish_id=self.kwargs['dish_pk'])
+
+        return rating
+
+
+    def get_serializer_class(self):
+        return RatingSerializer
+    
+
+    def get_serializer_context(self):
+        user_rating = self.get_queryset().filter(rater=self.request.user.profile).first()
+        return {'dish_pk': self.kwargs['dish_pk'], 'user': self.request.user, 'user_rating_pk': user_rating.id}
+
+        

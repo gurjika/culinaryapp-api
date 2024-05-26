@@ -38,6 +38,6 @@ class ChefProfile(models.Model):
 
 
 class Rating(models.Model):
-    rating = models.PositiveSmallIntegerField(validators=[MaxValueValidator(5), MinValueValidator(1)])
+    rating = models.FloatField(validators=[MaxValueValidator(5), MinValueValidator(1)])
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='ratings')
     rater = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='rateds')

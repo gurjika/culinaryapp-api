@@ -11,4 +11,8 @@ ingredients_router = routers.NestedDefaultRouter(parent_router=router, parent_pr
 ingredients_router.register('ingredients', views.IngredientViewSet, basename='ingredient')
 
 
-urlpatterns = router.urls + ingredients_router.urls
+ratings_router = routers.NestedDefaultRouter(parent_router=router, parent_prefix='dishes', lookup='dish')
+ratings_router.register('ratings', views.RatingViewSet, basename='rating')
+
+
+urlpatterns = router.urls + ingredients_router.urls + ratings_router.urls

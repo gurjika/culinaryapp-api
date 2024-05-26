@@ -82,16 +82,21 @@ class SimpleDishSerializer(serializers.ModelSerializer):
 
 class RatingSerializer(serializers.ModelSerializer):
     dish = SimpleDishSerializer(read_only=True)
+    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Rating
-        fields = ['rating', 'dish']
+        fields = ['id','rating', 'dish']
 
     def create(self, validated_data):
         
         rating, created = Rating.objects.update_or_create(
-            rating=validated_data['rating'], 
-            dish_id=self.context['dish_pk'], 
-            rater=self.context['user'].profile)
-        
+            id=self.context['user_rating_pk'],
+            defaults={
+                'rating': validated_data['rating'],
+                'dish_id': self.context['dish_pk'],
+                'rater': self.context['user'].profile
+            }
+        )
+                
 
         return rating
