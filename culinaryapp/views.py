@@ -6,7 +6,7 @@ from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerialize
 from .models import Dish, DishIngredient, Ingredient, Rating
 from rest_framework.response import Response
 from django.db.models import Avg
-
+from rest_framework import generics
 # Create your views here.
 
 
@@ -88,3 +88,16 @@ class RatingViewSet(ModelViewSet):
         return {'dish_pk': self.kwargs['dish_pk'], 'user': self.request.user, 'user_rating_pk': user_rating.id}
 
         
+class ExploreView(generics.ListAPIView):
+
+    def get_queryset(self):
+
+        dishes = Dish.objects.all()
+
+        common_ingredient_list = []
+
+        for dish in dishes:
+            for dish_ingredient in dish.dish_ingredients:
+                print(dish_ingredient)
+
+        return super().get_queryset()

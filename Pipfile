@@ -9,6 +9,8 @@ pillow = "*"
 drf-nested-routers = "*"
 mysqlclient = "*"
 django-debug-toolbar = "*"
+django-extensions = "*"
+requests = "*"
 
 [dev-packages]
 

@@ -26,7 +26,7 @@ class DishIngredient(models.Model):
 
 
 class DishImage(models.Model):
-    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField()
 
 
@@ -41,3 +41,12 @@ class Rating(models.Model):
     rating = models.FloatField(validators=[MaxValueValidator(5), MinValueValidator(1)])
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='ratings')
     rater = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='rateds')
+
+
+class DishTypeTag(models.Model):
+    dish = models.ManyToManyField(Dish, through='DishTag')
+    dish_tag = models.CharField(max_length=255)
+
+class DishTag(models.Model):
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='dish_tags')
+    tag = models.ForeignKey(DishTypeTag, on_delete=models.CASCADE)

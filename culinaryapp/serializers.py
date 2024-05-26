@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from culinaryapp.models import Dish, DishIngredient, Ingredient, Rating, UserProfile
+from culinaryapp.models import Dish, DishImage, DishIngredient, DishTag, DishTypeTag, Ingredient, Rating, UserProfile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -30,16 +30,32 @@ class DishIngredientSerializer(serializers.ModelSerializer):
         model = DishIngredient
         fields = ['ingredient', 'quantity', 'quantity_description']
 
+class DishTypeTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DishTypeTag
+        fields = ['id', 'dish_tag']
 
+class DishTagSerializer(serializers.ModelSerializer):
+    tag = DishTypeTagSerializer()
+    class Meta:
+        model = DishTag
+        fields = ['tag']
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DishImage
+        fields = ['id', 'image']
 
 class DishSerializer(serializers.ModelSerializer):
     dish_ingredients = DishIngredientSerializer(many=True, read_only=True)
     profile = ProfileSerializer(read_only=True)
     avg_rating = serializers.FloatField(read_only=True)
-    
+    dish_tags = DishTagSerializer(many=True, read_only=True)
+    images = ImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Dish
-        fields = ['id', 'profile', 'title', 'receipe', 'dish_ingredients', 'avg_rating']
+        fields = ['id', 'profile', 'title', 'receipe', 'dish_ingredients', 'avg_rating', 'images', 'dish_tags']
 
 
 class CreateDishSerializer(serializers.ModelSerializer):
