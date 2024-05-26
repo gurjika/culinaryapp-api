@@ -8,7 +8,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField('auth.user', on_delete=models.CASCADE, related_name='profile')
 
 class Ingredient(models.Model):
-
     title = models.CharField(max_length=255)
 
 class Dish(models.Model):

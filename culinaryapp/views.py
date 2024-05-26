@@ -11,9 +11,11 @@ from rest_framework import generics
 
 
 class DishViewSet(ModelViewSet):
-
+    
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Dish.objects.prefetch_related('dish_ingredients__ingredient').annotate(avg_rating=Avg('ratings__rating')).all()
+    queryset = Dish.objects. \
+    prefetch_related('dish_ingredients__ingredient', 'dish_ingredients', 'dish_tags__tag'). \
+    select_related('profile__user').prefetch_related('images').annotate(avg_rating=Avg('ratings__rating')).all()
 
     def get_serializer_class(self):
         if self.request.method == 'POST':

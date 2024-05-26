@@ -9,19 +9,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['user']
 
 
-class SimpleDishIngredient(serializers.ModelSerializer):
-    class Meta:
-        model = DishIngredient
-        fields = ['quantity', 'quantity_description']
-
-
 
 class IngredientSerializer(serializers.ModelSerializer):
-    dishes = SimpleDishIngredient(read_only=True, many=True)
     class Meta:
         model = Ingredient
-        fields = ['id', 'title', 'dishes']
-
+        fields = ['id', 'title']
 
 
 class DishIngredientSerializer(serializers.ModelSerializer):
