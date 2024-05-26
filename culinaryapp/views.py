@@ -1,15 +1,19 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, IngredientSerializer
-from .models import Dish, DishIngredient, Ingredient
+from culinaryapp.permissions import IsCreatorOfDishOrReadOnly, IsOwnerOrReadOnly
+from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, IngredientSerializer, RatingSerializer
+from .models import Dish, DishIngredient, Ingredient, Rating
 from rest_framework.response import Response
+from django.db.models import Avg
 
 # Create your views here.
 
 
 class DishViewSet(ModelViewSet):
-    queryset = Dish.objects.prefetch_related('dish_ingredients__ingredient').all()
+
+    permission_classes = [IsOwnerOrReadOnly]
+    queryset = Dish.objects.prefetch_related('dish_ingredients__ingredient').annotate(avg_rating=Avg('ratings__rating')).all()
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -20,11 +24,30 @@ class DishViewSet(ModelViewSet):
         return {'user': self.request.user}
     
 
+    @action(detail=True, methods=['GET', 'POST'])
+    def rate(self, request, pk):
+        if request.method == 'GET':
+            current_rating = Rating.objects.filter(
+                dish_id=self.kwargs['pk'],
+                rater=self.request.user.profile).first()
+            if current_rating:
+                serializer = RatingSerializer(instance=current_rating)
+                return Response(serializer.data)
+            else:
+                return Response({'detail': 'You have not rated this dish yet.'})
+            
+        elif request.method == 'POST':
+            serializer = RatingSerializer(data=request.data, context={'user': self.request.user, 'dish_pk': self.kwargs['pk']})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+
 
 
     
 
 class IngredientViewSet(ModelViewSet):
+    permission_classes = [IsCreatorOfDishOrReadOnly]
     serializer_class = IngredientSerializer
     http_method_names = ["get", 'post', 'delete', 'head', 'options']
 
@@ -45,3 +68,6 @@ class IngredientViewSet(ModelViewSet):
         dish.ingredient.remove(ingredient)
         return Response(f'ingredient removed from the list')
     
+
+
+# class RatingViewSet(ModelViewSet):

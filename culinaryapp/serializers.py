@@ -1,11 +1,19 @@
 from rest_framework import serializers
 
-from culinaryapp.models import Dish, DishIngredient, Ingredient
+from culinaryapp.models import Dish, DishIngredient, Ingredient, Rating, UserProfile
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['user']
+
 
 class SimpleDishIngredient(serializers.ModelSerializer):
     class Meta:
         model = DishIngredient
-        fields = [ 'quantity', 'quantity_description']
+        fields = ['quantity', 'quantity_description']
+
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -14,19 +22,24 @@ class IngredientSerializer(serializers.ModelSerializer):
         model = Ingredient
         fields = ['id', 'title', 'dishes']
 
+
+
 class DishIngredientSerializer(serializers.ModelSerializer):
     ingredient = IngredientSerializer()
     class Meta:
         model = DishIngredient
         fields = ['ingredient', 'quantity', 'quantity_description']
 
+
+
 class DishSerializer(serializers.ModelSerializer):
     dish_ingredients = DishIngredientSerializer(many=True, read_only=True)
-    profile = serializers.PrimaryKeyRelatedField(read_only=True)
-
+    profile = ProfileSerializer(read_only=True)
+    avg_rating = serializers.FloatField(read_only=True)
+    
     class Meta:
         model = Dish
-        fields = ['id', 'profile', 'title', 'receipe', 'dish_ingredients']
+        fields = ['id', 'profile', 'title', 'receipe', 'dish_ingredients', 'avg_rating']
 
 
 class CreateDishSerializer(serializers.ModelSerializer):
@@ -61,4 +74,24 @@ class AddIngredientSerializer(serializers.ModelSerializer):
         
         return dish_ingredient
     
-    
+
+class SimpleDishSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dish
+        fields = ['id', 'title']   
+
+class RatingSerializer(serializers.ModelSerializer):
+    dish = SimpleDishSerializer(read_only=True)
+    class Meta:
+        model = Rating
+        fields = ['rating', 'dish']
+
+    def create(self, validated_data):
+        
+        rating, created = Rating.objects.update_or_create(
+            rating=validated_data['rating'], 
+            dish_id=self.context['dish_pk'], 
+            rater=self.context['user'].profile)
+        
+
+        return rating
