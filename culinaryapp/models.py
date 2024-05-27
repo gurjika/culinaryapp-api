@@ -49,3 +49,8 @@ class DishTypeTag(models.Model):
 class DishTag(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='dish_tags')
     tag = models.ForeignKey(DishTypeTag, on_delete=models.CASCADE)
+
+
+class FavouriteDish(models.Model):
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='favourite_dishes')
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)

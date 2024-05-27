@@ -1,7 +1,9 @@
+from django.forms import ValidationError
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework.response import Response
 
-from culinaryapp.models import Dish, DishImage, DishIngredient, DishTag, DishTypeTag, Ingredient, Rating, UserProfile
+from culinaryapp.models import Dish, DishImage, DishIngredient, DishTag, DishTypeTag, FavouriteDish, Ingredient, Rating, UserProfile
 
 class DisplayUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -127,3 +129,25 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['user', 'dishes']
+
+class FavouriteDishSerializer(serializers.ModelSerializer):
+    dish = SimpleDishSerializer(read_only=True)
+    class Meta:
+        model = FavouriteDish
+        fields = ['dish']
+
+
+class FavouriteDishCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FavouriteDish
+        fields = ['dish']
+
+    def create(self, validated_data):
+        fav_obj = FavouriteDish.objects.create(dish=validated_data['dish'], profile=self.context['user'].profile)
+        return fav_obj
+    
+    def validate_dish(self, value):
+        if FavouriteDish.objects.filter(dish=value, profile=self.context['user'].profile).exists():
+            raise serializers.ValidationError("Dish Already in Favourites")
+        return value

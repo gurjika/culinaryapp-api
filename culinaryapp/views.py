@@ -4,8 +4,8 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from culinaryapp.permissions import IsCreatorOfDishOrReadOnly, IsOwnerOrReadOnly
-from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer, SimpleDishSerializer
-from .models import Dish, DishImage, DishIngredient, Ingredient, Rating, UserProfile
+from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, FavouriteDishCreateSerializer, FavouriteDishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer, SimpleDishSerializer
+from .models import Dish, DishImage, DishIngredient, FavouriteDish, Ingredient, Rating, UserProfile
 from rest_framework.response import Response
 from django.db.models import Avg
 from rest_framework import generics
@@ -161,3 +161,14 @@ class ImageViewSet(ModelViewSet):
     
 
     
+class FavouriteDishViewSet(ModelViewSet):
+    def get_queryset(self):
+        return FavouriteDish.objects.filter(profile__user=self.request.user).all()
+
+    def get_serializer_context(self):
+        return {'user': self.request.user}
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return FavouriteDishCreateSerializer
+        return FavouriteDishSerializer
