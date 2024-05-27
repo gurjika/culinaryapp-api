@@ -20,7 +20,8 @@ images_router = routers.NestedDefaultRouter(parent_router=router, parent_prefix=
 images_router.register('images', views.ImageViewSet, basename='image')
 
 urlpatterns = [
-    path('profile/', views.ProfileView.as_view(), name='profile')
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('explore/', views.ExploreView.as_view(), name='explore')
 ]
 
 urlpatterns += router.urls + ingredients_router.urls + ratings_router.urls + images_router.urls
