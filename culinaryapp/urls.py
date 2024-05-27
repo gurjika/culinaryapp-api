@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework_nested import routers
 from . import views
 
@@ -15,4 +16,11 @@ ratings_router = routers.NestedDefaultRouter(parent_router=router, parent_prefix
 ratings_router.register('ratings', views.RatingViewSet, basename='rating')
 
 
-urlpatterns = router.urls + ingredients_router.urls + ratings_router.urls
+images_router = routers.NestedDefaultRouter(parent_router=router, parent_prefix='dishes', lookup='dish')
+images_router.register('images', views.ImageViewSet, basename='image')
+
+urlpatterns = [
+    path('profile/', views.ProfileView.as_view(), name='profile')
+]
+
+urlpatterns += router.urls + ingredients_router.urls + ratings_router.urls + images_router.urls

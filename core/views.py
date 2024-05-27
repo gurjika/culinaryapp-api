@@ -8,7 +8,8 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.authtoken.models import Token
 
-from core.serializers import DisplayUserSerializer, LoginSerializer, RegisterSerializer
+from culinaryapp.serializers import DisplayUserSerializer
+from core.serializers import  LoginSerializer, RegisterSerializer
 
 # Create your views here.
 

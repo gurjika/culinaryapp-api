@@ -1,7 +1,12 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 from culinaryapp.models import Dish, DishImage, DishIngredient, DishTag, DishTypeTag, Ingredient, Rating, UserProfile
 
+class DisplayUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,6 +42,12 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = DishImage
         fields = ['id', 'image']
+
+
+    def create(self, validated_data):
+
+        dish_image = DishImage.objects.create(image=validated_data['image'], dish_id=self.context['dish_pk'])
+        return dish_image
 
 class DishSerializer(serializers.ModelSerializer):
     dish_ingredients = DishIngredientSerializer(many=True, read_only=True)
@@ -108,3 +119,10 @@ class RatingSerializer(serializers.ModelSerializer):
                 
 
         return rating
+    
+class ProfileSerializer(serializers.ModelSerializer):
+    dishes = SimpleDishSerializer(read_only=True, many=True)
+    user = DisplayUserSerializer()
+    class Meta:
+        model = UserProfile
+        fields = ['user', 'dishes']

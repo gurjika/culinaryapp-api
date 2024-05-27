@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from culinaryapp.permissions import IsCreatorOfDishOrReadOnly, IsOwnerOrReadOnly
-from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, IngredientSerializer, RatingSerializer
-from .models import Dish, DishIngredient, Ingredient, Rating
+from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer
+from .models import Dish, DishImage, DishIngredient, Ingredient, Rating, UserProfile
 from rest_framework.response import Response
 from django.db.models import Avg
 from rest_framework import generics
@@ -73,7 +73,6 @@ class IngredientViewSet(ModelViewSet):
 
 
 class RatingViewSet(ModelViewSet):
-    
 
     def get_queryset(self):
         rating = Rating.objects.filter(dish_id=self.kwargs['dish_pk'])
@@ -103,3 +102,24 @@ class ExploreView(generics.ListAPIView):
                 print(dish_ingredient)
 
         return super().get_queryset()
+    
+
+class ProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        profile = UserProfile.objects.get(user=self.request.user)
+        return profile
+    
+class ImageViewSet(ModelViewSet):
+    permission_classes = [IsCreatorOfDishOrReadOnly]
+
+    def get_queryset(self):
+        images = DishImage.objects.filter(dish_id=self.kwargs['dish_pk']).all()
+        return images
+    
+    serializer_class = ImageSerializer
+
+
+    def get_serializer_context(self):
+        return {'dish_pk': self.kwargs['dish_pk']}
