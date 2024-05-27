@@ -86,7 +86,16 @@ class RatingViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         user_rating = self.get_queryset().filter(rater=self.request.user.profile).first()
-        return {'dish_pk': self.kwargs['dish_pk'], 'user': self.request.user, 'user_rating_pk': user_rating.id}
+
+        context = {
+            'dish_pk': self.kwargs['dish_pk'], 
+            'user': self.request.user,
+        }
+
+        if user_rating:
+            context['user_rating_pk'] = user_rating.id
+            
+        return context
 
         
 class ExploreView(generics.ListAPIView):

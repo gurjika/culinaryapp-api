@@ -108,14 +108,15 @@ class RatingSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         
-        rating, created = Rating.objects.update_or_create(
-            id=self.context['user_rating_pk'],
-            defaults={
-                'rating': validated_data['rating'],
-                'dish_id': self.context['dish_pk'],
-                'rater': self.context['user'].profile
-            }
-        )
+        try:
+            rating = Rating.objects.get(id=self.context['user_rating_pk'])
+            rating.rating = validated_data['rating']
+        except KeyError:
+            rating = Rating.objects.create(
+                rating=validated_data['rating'], 
+                rater=self.context['user'].profile, 
+                dish_id=self.context['dish_pk']
+            )
                 
 
         return rating
