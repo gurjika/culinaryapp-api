@@ -101,12 +101,14 @@ class SimpleDishSerializer(serializers.ModelSerializer):
         model = Dish
         fields = ['id', 'title']   
 
+
 class RatingSerializer(serializers.ModelSerializer):
     dish = SimpleDishSerializer(read_only=True)
     id = serializers.IntegerField(read_only=True)
+    rater = ProfileSerializer(read_only=True)
     class Meta:
         model = Rating
-        fields = ['id','rating', 'dish']
+        fields = ['id','rating', 'dish', 'rater']
 
     def create(self, validated_data):
         
@@ -151,3 +153,8 @@ class FavouriteDishCreateSerializer(serializers.ModelSerializer):
         if FavouriteDish.objects.filter(dish=value, profile=self.context['user'].profile).exists():
             raise serializers.ValidationError("Dish Already in Favourites")
         return value
+    
+class ExploreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dish
+        fields = ['id', 'title', 'profile']

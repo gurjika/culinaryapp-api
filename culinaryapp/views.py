@@ -4,10 +4,11 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from culinaryapp.permissions import IsCreatorOfDishOrReadOnly, IsOwnerOrReadOnly
-from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, FavouriteDishCreateSerializer, FavouriteDishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer, SimpleDishSerializer
+from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, ExploreSerializer, FavouriteDishCreateSerializer, FavouriteDishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer, SimpleDishSerializer
 from .models import Dish, DishImage, DishIngredient, FavouriteDish, Ingredient, Rating, UserProfile
 from rest_framework.response import Response
 from django.db.models import Avg
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 # Create your views here.
 
@@ -28,23 +29,23 @@ class DishViewSet(ModelViewSet):
         return {'user': self.request.user}
     
 
-    @action(detail=True, methods=['GET', 'POST'])
-    def rate(self, request, pk):
-        if request.method == 'GET':
-            current_rating = Rating.objects.filter(
-                dish_id=self.kwargs['pk'],
-                rater=self.request.user.profile).first()
-            if current_rating:
-                serializer = RatingSerializer(instance=current_rating)
-                return Response(serializer.data)
-            else:
-                return Response({'detail': 'You have not rated this dish yet.'})
+    # @action(detail=True, methods=['GET', 'POST'])
+    # def rate(self, request, pk):
+    #     if request.method == 'GET':
+    #         current_rating = Rating.objects.filter(
+    #             dish_id=self.kwargs['pk'],
+    #             rater=self.request.user.profile).first()
+    #         if current_rating:
+    #             serializer = RatingSerializer(instance=current_rating)
+    #             return Response(serializer.data)
+    #         else:
+    #             return Response({'detail': 'You have not rated this dish yet.'})
             
-        elif request.method == 'POST':
-            serializer = RatingSerializer(data=request.data, context={'user': self.request.user, 'dish_pk': self.kwargs['pk']})
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data)
+    #     elif request.method == 'POST':
+    #         serializer = RatingSerializer(data=request.data, context={'user': self.request.user, 'dish_pk': self.kwargs['pk']})
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save()
+    #         return Response(serializer.data)
 
 
 
@@ -78,16 +79,22 @@ class RatingViewSet(ModelViewSet):
 
     def get_queryset(self):
         rating = Rating.objects.filter(dish_id=self.kwargs['dish_pk'])
-
         return rating
 
 
     def get_serializer_class(self):
         return RatingSerializer
     
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def get_serializer_context(self):
-        user_rating = self.get_queryset().filter(rater=self.request.user.profile).first()
+        try:
+            user_rating = self.get_queryset().filter(rater=self.request.user.profile).first()
+        except AttributeError:
+            user_rating = None
 
         context = {
             'dish_pk': self.kwargs['dish_pk'], 
@@ -101,7 +108,9 @@ class RatingViewSet(ModelViewSet):
 
         
 class ExploreView(generics.ListAPIView):
-    serializer_class = SimpleDishSerializer
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = ExploreSerializer
 
     def get_queryset(self):
 
@@ -140,6 +149,7 @@ class ExploreView(generics.ListAPIView):
         
 
 class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = ProfileSerializer
 
     def get_object(self):
@@ -162,6 +172,8 @@ class ImageViewSet(ModelViewSet):
 
     
 class FavouriteDishViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         return FavouriteDish.objects.filter(profile__user=self.request.user).all()
 
