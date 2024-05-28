@@ -1,14 +1,17 @@
 from collections import Counter
 import random
+import traceback
+from django.db import connection
 from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import ListModelMixin
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.decorators import action
 from culinaryapp.permissions import IsCreatorOfDishOrReadOnly, IsOwnerOrReadOnly
-from culinaryapp.serializers import AddIngredientSerializer, CreateDishSerializer, DishSerializer, ExploreSerializer, FavouriteDishCreateSerializer, FavouriteDishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer, SimpleDishSerializer
-from .models import Dish, DishImage, DishIngredient, FavouriteDish, Ingredient, Rating, UserProfile
+from culinaryapp.serializers import AddIngredientSerializer, ChefSerializer, CreateDishSerializer, DishSerializer, ExploreSerializer, FavouriteDishCreateSerializer, FavouriteDishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer, SimpleDishSerializer
+from .models import ChefProfile, Dish, DishImage, DishIngredient, FavouriteDish, Ingredient, Rating, UserProfile
 from rest_framework.response import Response
 from django.db.models import Avg
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework import generics
 # Create your views here.
 
@@ -107,23 +110,21 @@ class RatingViewSet(ModelViewSet):
         return context
 
         
-class ExploreView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
-
+class ExploreView(ListModelMixin, GenericViewSet):
     serializer_class = ExploreSerializer
 
     def get_queryset(self):
 
-        
         user_dishes = Dish.objects.filter(profile__user=self.request.user). \
-        prefetch_related('dish_ingredients__ingredient', 'dish_ingredients', 'dish_tags__tag') \
-        .all()
-
+        prefetch_related('dish_ingredients__ingredient', 'dish_ingredients', 'dish_tags__tag')
+        
+        user_dishes_list = list(user_dishes)
 
         try:
-            dishes_sample = random.sample(list(user_dishes), 5)
+            dishes_sample = random.sample(user_dishes_list, 5)
         except ValueError:
-            dishes_sample = list(user_dishes)
+            dishes_sample = user_dishes_list
+
         
         dish_tags = set()
         dish_ingredients = []
@@ -141,9 +142,9 @@ class ExploreView(generics.ListAPIView):
         ingredient_sample = [ingredient for ingredient, _ in ingredient_counts.most_common(3)]
 
 
-        explore_dishes = Dish.objects.filter(dish_tags__tag__in=dish_tags, dish_ingredients__ingredient__in=ingredient_sample).exclude(profile__user=self.request.user).distinct()
+        explore_dishes = Dish.objects.filter(dish_tags__tag__in=dish_tags, dish_ingredients__ingredient__in=ingredient_sample).exclude(profile__user=self.request.user).distinct().all()
 
-
+        print('test')
 
         return explore_dishes
         
@@ -184,3 +185,16 @@ class FavouriteDishViewSet(ModelViewSet):
         if self.request.method == 'POST':
             return FavouriteDishCreateSerializer
         return FavouriteDishSerializer
+    
+
+
+class ChefViewSet(ModelViewSet):
+    permission_classes = []
+    serializer_class = ChefSerializer
+
+    def get_queryset(self):
+        return ChefProfile.objects.select_related('added_by__user').all()
+    
+
+    def get_serializer_context(self):
+        return {'user': self.request.user}

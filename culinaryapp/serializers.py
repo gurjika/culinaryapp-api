@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 
-from culinaryapp.models import Dish, DishImage, DishIngredient, DishTag, DishTypeTag, FavouriteDish, Ingredient, Rating, UserProfile
+from culinaryapp.models import ChefProfile, Dish, DishImage, DishIngredient, DishTag, DishTypeTag, FavouriteDish, Ingredient, Rating, UserProfile
 
 class DisplayUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,16 +23,20 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ['id', 'title']
 
 
+
 class DishIngredientSerializer(serializers.ModelSerializer):
     ingredient = IngredientSerializer()
     class Meta:
         model = DishIngredient
         fields = ['ingredient', 'quantity', 'quantity_description']
 
+
 class DishTypeTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = DishTypeTag
         fields = ['id', 'dish_tag']
+
+
 
 class DishTagSerializer(serializers.ModelSerializer):
     tag = DishTypeTagSerializer()
@@ -132,6 +136,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['user', 'dishes']
 
+class SimpleProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['user']
+
 class FavouriteDishSerializer(serializers.ModelSerializer):
     dish = SimpleDishSerializer(read_only=True)
     class Meta:
@@ -155,6 +164,18 @@ class FavouriteDishCreateSerializer(serializers.ModelSerializer):
         return value
     
 class ExploreSerializer(serializers.ModelSerializer):
+    profile = SimpleProfileSerializer()
     class Meta:
         model = Dish
         fields = ['id', 'title', 'profile']
+
+class ChefSerializer(serializers.ModelSerializer):
+    added_by = SimpleProfileSerializer(read_only=True)
+
+    class Meta:
+        model = ChefProfile
+        fields = ['id', 'name', 'last_name', 'added_by', 'bio']
+
+    def create(self, validated_data):
+        chef_obj = ChefProfile.objects.create(added_by=self.context['user'].profile, **validated_data)  
+        return chef_obj

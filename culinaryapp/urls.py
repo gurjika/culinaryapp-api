@@ -7,6 +7,8 @@ router = routers.DefaultRouter()
 
 router.register(prefix='dishes', viewset=views.DishViewSet, basename='dish')
 router.register(prefix='favourites', viewset=views.FavouriteDishViewSet, basename='favourite')
+router.register(prefix='explore', viewset=views.ExploreView, basename='explore')
+router.register(prefix='chefs', viewset=views.ChefViewSet, basename='chef')
 
 ingredients_router = routers.NestedDefaultRouter(parent_router=router, parent_prefix='dishes', lookup='dish')
 ingredients_router.register('ingredients', views.IngredientViewSet, basename='ingredient')
@@ -21,7 +23,6 @@ images_router.register('images', views.ImageViewSet, basename='image')
 
 urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='profile'),
-    path('explore/', views.ExploreView.as_view(), name='explore')
 ]
 
 urlpatterns += router.urls + ingredients_router.urls + ratings_router.urls + images_router.urls

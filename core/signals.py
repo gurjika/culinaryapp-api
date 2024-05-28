@@ -8,5 +8,4 @@ from rest_framework.authtoken.models import Token
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
-        print('here')
         Token.objects.create(user=instance)

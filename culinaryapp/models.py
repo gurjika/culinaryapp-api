@@ -44,7 +44,7 @@ class ChefProfile(models.Model):
     last_name = models.CharField(max_length=255)
     specialty = models.CharField(max_length=255)
     bio = models.TextField()
-
+    added_by = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, related_name='chefs')
 
 class Rating(models.Model):
     rating = models.FloatField(validators=[MaxValueValidator(5), MinValueValidator(1)])
