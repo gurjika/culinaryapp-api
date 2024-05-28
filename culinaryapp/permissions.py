@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 from rest_framework import permissions
-from .models import Dish
+from .models import ChefProfile, Dish
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -21,3 +21,12 @@ class IsCreatorOfDishOrReadOnly(BasePermission):
 
         return dish.profile.user == request.user
         
+
+class IsCreatorOfChefOrReadOnly(BasePermission):
+    def has_object_permission(self, request, view, obj):
+ 
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.added_by.user == request.user

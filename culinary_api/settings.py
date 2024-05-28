@@ -12,16 +12,18 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
-
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/\
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-uubi8yb$i6)rzvrbnhz&m*5e#4n8c@-#_s-ebn^959=b=#rbs@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'culinaryapp',
     'debug_toolbar',
     'django_extensions',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +79,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'culinary_api.wsgi.application'
+
+
+
+
+NAME = os.environ.get('NAME')
+HOST = os.environ.get('HOST')
+PASSWORD = os.environ.get('PASSWORD')
+USER = os.environ.get('USER')
+
 
 
 # Database

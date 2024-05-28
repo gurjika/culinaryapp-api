@@ -10,7 +10,7 @@ class DisplayUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
 
-class ProfileSerializer(serializers.ModelSerializer):
+class SimpleProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['user']
@@ -57,7 +57,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class DishSerializer(serializers.ModelSerializer):
     dish_ingredients = DishIngredientSerializer(many=True, read_only=True)
-    profile = ProfileSerializer(read_only=True)
+    profile = SimpleProfileSerializer(read_only=True)
     avg_rating = serializers.FloatField(read_only=True)
     dish_tags = DishTagSerializer(many=True, read_only=True)
     images = ImageSerializer(many=True, read_only=True)
@@ -109,7 +109,7 @@ class SimpleDishSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     dish = SimpleDishSerializer(read_only=True)
     id = serializers.IntegerField(read_only=True)
-    rater = ProfileSerializer(read_only=True)
+    rater = SimpleProfileSerializer(read_only=True)
     class Meta:
         model = Rating
         fields = ['id','rating', 'dish', 'rater']
@@ -129,6 +129,8 @@ class RatingSerializer(serializers.ModelSerializer):
 
         return rating
     
+    
+    
 class ProfileSerializer(serializers.ModelSerializer):
     dishes = SimpleDishSerializer(read_only=True, many=True)
     user = DisplayUserSerializer()
@@ -136,10 +138,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['user', 'dishes']
 
-class SimpleProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ['user']
+
 
 class FavouriteDishSerializer(serializers.ModelSerializer):
     dish = SimpleDishSerializer(read_only=True)

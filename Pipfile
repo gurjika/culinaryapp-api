@@ -11,8 +11,10 @@ mysqlclient = "*"
 django-debug-toolbar = "*"
 django-extensions = "*"
 requests = "*"
+drf-yasg = "*"
 
 [dev-packages]
+python-dotenv = "*"
 
 [requires]
 python_version = "3.11"

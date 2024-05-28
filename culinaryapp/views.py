@@ -2,11 +2,11 @@ from collections import Counter
 import random
 import traceback
 from django.db import connection
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework.mixins import ListModelMixin
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.decorators import action
-from culinaryapp.permissions import IsCreatorOfDishOrReadOnly, IsOwnerOrReadOnly
+from culinaryapp.permissions import IsCreatorOfDishOrReadOnly, IsOwnerOrReadOnly, IsCreatorOfChefOrReadOnly
 from culinaryapp.serializers import AddIngredientSerializer, ChefSerializer, CreateDishSerializer, DishSerializer, ExploreSerializer, FavouriteDishCreateSerializer, FavouriteDishSerializer, ImageSerializer, IngredientSerializer, ProfileSerializer, RatingSerializer, SimpleDishSerializer
 from .models import ChefProfile, Dish, DishImage, DishIngredient, FavouriteDish, Ingredient, Rating, UserProfile
 from rest_framework.response import Response
@@ -81,7 +81,8 @@ class IngredientViewSet(ModelViewSet):
 class RatingViewSet(ModelViewSet):
 
     def get_queryset(self):
-        rating = Rating.objects.filter(dish_id=self.kwargs['dish_pk'])
+        dish = get_object_or_404(Dish, id=self.kwargs['dish_pk'])
+        rating = Rating.objects.filter(dish=dish).all()
         return rating
 
 
@@ -144,7 +145,6 @@ class ExploreView(ListModelMixin, GenericViewSet):
 
         explore_dishes = Dish.objects.filter(dish_tags__tag__in=dish_tags, dish_ingredients__ingredient__in=ingredient_sample).exclude(profile__user=self.request.user).distinct().all()
 
-        print('test')
 
         return explore_dishes
         
@@ -189,12 +189,12 @@ class FavouriteDishViewSet(ModelViewSet):
 
 
 class ChefViewSet(ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticatedOrReadOnly, IsCreatorOfChefOrReadOnly]
     serializer_class = ChefSerializer
 
     def get_queryset(self):
+        
         return ChefProfile.objects.select_related('added_by__user').all()
-    
 
     def get_serializer_context(self):
         return {'user': self.request.user}
