@@ -13,96 +13,6 @@ CulinaryApp is a Django-based web application that allows users to create, manag
 - **Favorite Dishes**: Users can add dishes to their favorites.
 - **Chef Profiles**: Users can view and follow their favorite chefs.
 
-## Models
-
-### UserProfile
-- `user`: One-to-one relationship with the `User` model.
-
-### Ingredient
-- `title`: CharField for the name of the ingredient.
-
-### Dish
-- `title`: CharField for the name of the dish.
-- `profile`: ForeignKey to the `UserProfile` model.
-- `receipe`: TextField for the dish's recipe.
-- `ingredient`: Many-to-many relationship with the `Ingredient` model through `DishIngredient`.
-
-### DishIngredient
-- `ingredient`: ForeignKey to the `Ingredient` model.
-- `dish`: ForeignKey to the `Dish` model.
-- `quantity`: FloatField for the quantity of the ingredient.
-- `quantity_description`: CharField for the description of the quantity.
-
-### DishImage
-- `dish`: ForeignKey to the `Dish` model.
-- `image`: ImageField for the dish's image.
-
-### ChefProfile
-- `name`: CharField for the chef's first name.
-- `last_name`: CharField for the chef's last name.
-- `specialty`: CharField for the chef's specialty.
-- `bio`: TextField for the chef's biography.
-- `profile`: ForeignKey to the `UserProfile` model.
-
-### Rating
-- `rating`: FloatField for the rating with validators for max and min values.
-- `dish`: ForeignKey to the `Dish` model.
-- `profile`: ForeignKey to the `UserProfile` model.
-
-### DishTypeTag
-- `dish`: Many-to-many relationship with the `Dish` model through `DishTag`.
-- `dish_tag`: CharField for the tag name.
-
-### DishTag
-- `dish`: ForeignKey to the `Dish` model.
-- `tag`: ForeignKey to the `DishTypeTag` model.
-
-### FavouriteDish
-- `profile`: ForeignKey to the `UserProfile` model.
-- `dish`: ForeignKey to the `Dish` model.
-
-## API Endpoints
-
-### User
-- `GET /users/`: List all users.
-- `POST /users/`: Create a new user.
-- `GET /users/{id}/`: Retrieve a user by ID.
-- `PUT /users/{id}/`: Update a user by ID.
-- `DELETE /users/{id}/`: Delete a user by ID.
-
-### Dish
-- `GET /dishes/`: List all dishes.
-- `POST /dishes/`: Create a new dish.
-- `GET /dishes/{id}/`: Retrieve a dish by ID.
-- `PUT /dishes/{id}/`: Update a dish by ID.
-- `DELETE /dishes/{id}/`: Delete a dish by ID.
-
-### Ingredient
-- `GET /ingredients/`: List all ingredients.
-- `POST /ingredients/`: Create a new ingredient.
-- `GET /ingredients/{id}/`: Retrieve an ingredient by ID.
-- `PUT /ingredients/{id}/`: Update an ingredient by ID.
-- `DELETE /ingredients/{id}/`: Delete an ingredient by ID.
-
-### Rating
-- `GET /ratings/`: List all ratings.
-- `POST /ratings/`: Create a new rating.
-- `GET /ratings/{id}/`: Retrieve a rating by ID.
-- `PUT /ratings/{id}/`: Update a rating by ID.
-- `DELETE /ratings/{id}/`: Delete a rating by ID.
-
-### FavouriteDish
-- `GET /favourites/`: List all favourite dishes.
-- `POST /favourites/`: Create a new favourite dish.
-- `GET /favourites/{id}/`: Retrieve a favourite dish by ID.
-- `DELETE /favourites/{id}/`: Delete a favourite dish by ID.
-
-### ChefProfile
-- `GET /chefs/`: List all chefs.
-- `POST /chefs/`: Create a new chef profile.
-- `GET /chefs/{id}/`: Retrieve a chef profile by ID.
-- `PUT /chefs/{id}/`: Update a chef profile by ID.
-- `DELETE /chefs/{id}/`: Delete a chef profile by ID.
 
 ## Installation
 
@@ -136,11 +46,8 @@ CulinaryApp is a Django-based web application that allows users to create, manag
     python manage.py runserver
     ```
 
-## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
 
-## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for more information.
+
 """
