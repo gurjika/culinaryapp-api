@@ -33,6 +33,8 @@ class DishIngredient(models.Model):
     quantity = models.FloatField()
     quantity_description = models.CharField(max_length=255)
 
+    class Meta:
+        unique_together = [['dish', 'ingredient']]
 
 class DishImage(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='images')
@@ -44,12 +46,12 @@ class ChefProfile(models.Model):
     last_name = models.CharField(max_length=255)
     specialty = models.CharField(max_length=255)
     bio = models.TextField()
-    added_by = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, related_name='chefs')
+    profile = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, related_name='chefs')
 
 class Rating(models.Model):
     rating = models.FloatField(validators=[MaxValueValidator(5), MinValueValidator(1)])
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='ratings')
-    rater = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='rateds')
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='rateds')
 
     def __str__(self) -> str:
         return f'{self.rater} - {self.rating}'
@@ -61,11 +63,15 @@ class DishTypeTag(models.Model):
 
     def __str__(self) -> str:
         return self.dish_tag
+    
+
 
 class DishTag(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='dish_tags')
     tag = models.ForeignKey(DishTypeTag, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = [['dish', 'tag']]
 
 class FavouriteDish(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='favourite_dishes')

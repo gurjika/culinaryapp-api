@@ -109,17 +109,18 @@ class SimpleDishSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     dish = SimpleDishSerializer(read_only=True)
     id = serializers.IntegerField(read_only=True)
-    rater = SimpleProfileSerializer(read_only=True)
+    profile = SimpleProfileSerializer(read_only=True)
     class Meta:
         model = Rating
-        fields = ['id','rating', 'dish', 'rater']
+        fields = ['id','rating', 'dish', 'profile']
 
     def create(self, validated_data):
         
         try:
-            rating = Rating.objects.get(id=self.context['user_rating_pk'])
+            rating = Rating.objects.get(rater=self.context['user'].profile, dish_id=self.context['dish_pk'])
             rating.rating = validated_data['rating']
-        except KeyError:
+            rating.save()
+        except Rating.DoesNotExist:
             rating = Rating.objects.create(
                 rating=validated_data['rating'], 
                 rater=self.context['user'].profile, 
@@ -129,7 +130,7 @@ class RatingSerializer(serializers.ModelSerializer):
 
         return rating
     
-    
+
     
 class ProfileSerializer(serializers.ModelSerializer):
     dishes = SimpleDishSerializer(read_only=True, many=True)
@@ -169,12 +170,12 @@ class ExploreSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'profile']
 
 class ChefSerializer(serializers.ModelSerializer):
-    added_by = SimpleProfileSerializer(read_only=True)
+    profile = SimpleProfileSerializer(read_only=True)
 
     class Meta:
         model = ChefProfile
-        fields = ['id', 'name', 'last_name', 'added_by', 'bio']
+        fields = ['id', 'name', 'last_name', 'profile', 'bio']
 
     def create(self, validated_data):
-        chef_obj = ChefProfile.objects.create(added_by=self.context['user'].profile, **validated_data)  
+        chef_obj = ChefProfile.objects.create(profile=self.context['user'].profile, **validated_data)  
         return chef_obj
