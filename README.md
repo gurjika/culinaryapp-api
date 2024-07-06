@@ -11,7 +11,7 @@ CulinaryApp is a Django-based web application that allows users to create, manag
 - **Rating System**: Users can rate dishes.
 - **Explore Dishes**: Users can explore dishes based on their preferences.
 - **Favorite Dishes**: Users can add dishes to their favorites.
-- **Chef Profiles**: Users can view and follow their favorite chefs.
+- **Chef Profiles**: Users can view and add their favorite chefs.
 
 ## Swagger Documentation
 To explore and test the API endpoints, visit the Swagger documentation at http://localhost:8000/swagger/schema. This interactive documentation provides detailed information about each endpoint, including the expected request bodies, response formats, and query parameters.
