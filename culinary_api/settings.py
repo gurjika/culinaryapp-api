@@ -90,8 +90,8 @@ WSGI_APPLICATION = 'culinary_api.wsgi.application'
 
 
 NAME = os.environ.get('NAME')
-HOST = os.environ.get('HOST')
-PASSWORD = os.environ.get('PASSWORD')
+HOST = os.environ.get('HOST', 'localhost')
+PASSWORD = os.environ.get('PASSWORD', 'Mypassword')
 USER = os.environ.get('USER')
 
 

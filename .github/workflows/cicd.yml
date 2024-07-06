@@ -16,13 +16,13 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: ${PASSWORD}
+          MYSQL_ROOT_PASSWORD: Mypassword
           MYSQL_DATABASE: culinaryapp
         ports:
           - 3306:3306
 
     env:
-      DATABASE_URL: mysql://root:${PASSWORD}@127.0.0.1:3306/culinaryapp
+      DATABASE_URL: mysql://root:Mypassword@127.0.0.1:3306/culinaryapp
 
     steps:
     - name: Checkout code
