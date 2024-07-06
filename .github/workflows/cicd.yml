@@ -1,0 +1,44 @@
+name: CulinaryAPI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+
+  pull_request:
+    branches: [ master ] 
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services: 
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: ${PASSWORD}
+          MYSQL_DATABASE: culinaryapp
+        ports:
+          - 3306:3306
+        options: --health-cmd='mysqladmin ping --silent' --health-interval=10s --health-timeout=5s --health-retries=3
+
+    env:
+      DATABASE_URL: mysql://root:${PASSWORD}@127.0.0.1:3306/culinaryapp
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run migrations
+      run: |
+         python manage.py migrate
