@@ -146,6 +146,7 @@ class RatingViewSet(ModelViewSet):
 
         
 class ExploreView(ListModelMixin, GenericViewSet):
+    permission_classes = [IsAuthenticated]
     """
     View for exploring dishes based on user preferences.
 
@@ -157,7 +158,6 @@ class ExploreView(ListModelMixin, GenericViewSet):
     serializer_class = ExploreSerializer
 
     def get_queryset(self):
-
         user_dishes = Dish.objects.filter(profile__user=self.request.user). \
         prefetch_related('dish_ingredients__ingredient', 'dish_ingredients', 'dish_tags__tag')
         
