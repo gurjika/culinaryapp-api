@@ -14,8 +14,8 @@ CulinaryApp is a Django-based web application that allows users to create, manag
 - **Chef Profiles**: Users can view and add their favorite chefs.
 
 ## Swagger Documentation
-To explore and test the API endpoints, visit the Swagger documentation at http://localhost:8000/swagger/schema. This interactive documentation provides detailed information about each endpoint, including the expected request bodies, response formats, and query parameters.
 
+To explore and test the API endpoints, visit the Swagger documentation at [http://localhost:8000/swagger/schema](http://localhost:8000/swagger/schema). This interactive documentation provides detailed information about each endpoint, including the expected request bodies, response formats, and query parameters.
 
 ## Installation
 
@@ -23,33 +23,33 @@ To explore and test the API endpoints, visit the Swagger documentation at http:/
     ```sh
     git clone https://github.com/yourusername/culinaryapp.git
     ```
+
 2. Change into the project directory:
     ```sh
     cd culinaryapp
     ```
-3. Create a virtual environment and activate it:
-    ```sh
-    python -m venv env
-    source env/bin/activate  # On Windows use `env\\Scripts\\activate`
+
+3. Create a `.env` file and specify the required environment variables:
+    ```env
+    PASSWORD=your_db_password
+    HOST=mysql
     ```
-4. Install the dependencies:
+
+4. Run the application using Docker Compose:
     ```sh
-    pip install -r requirements.txt
+    docker-compose up -d
     ```
+
 5. Run the database migrations:
     ```sh
-    python manage.py migrate
+    docker-compose run django python manage.py migrate
     ```
+
 6. Create a superuser:
     ```sh
-    python manage.py createsuperuser
-    ```
-7. Start the development server:
-    ```sh
-    python manage.py runserver
+    docker-compose run django python manage.py createsuperuser
     ```
 
+7. Access the development server at [http://localhost:8000](http://localhost:8000).
 
-
-
-
+With these steps, your CulinaryApp should be up and running using Docker Compose. Enjoy exploring and managing your favorite dishes!
