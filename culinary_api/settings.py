@@ -103,11 +103,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'culinaryapp',
-        'HOST': 'localhost',
+        'HOST': 'mysql',
         'USER': 'root',
-        'PASSWORD': 'Lukikosi7680BGH',
+        'PASSWORD': PASSWORD
     }
 }
+
+
 
 
 # Password validation
