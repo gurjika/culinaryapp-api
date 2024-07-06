@@ -26,7 +26,7 @@ To explore and test the API endpoints, visit the Swagger documentation at [http:
 
 2. Change into the project directory:
     ```sh
-    cd culinaryapp
+    cd culinaryapp-api
     ```
 
 3. Create a `.env` file and specify the required environment variables:
