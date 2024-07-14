@@ -72,8 +72,7 @@ jobs:
            key: ${{ secrets.SSH_PRIVATE_KEY}}
 
            script: |
-             ssh root@207.154.236.26
-             cd culinaryapp_api
+             cd culinaryapp-api
              docker compose down
              git pull
              docker compose up --detach
