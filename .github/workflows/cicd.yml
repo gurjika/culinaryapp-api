@@ -73,7 +73,7 @@ jobs:
 
            script: |
              ssh root@207.154.236.26
-             cd django-cicd
+             cd culinaryapp_api
              docker compose down
              git pull
              docker compose up --detach
