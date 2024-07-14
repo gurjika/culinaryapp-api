@@ -36,18 +36,18 @@ jobs:
       run: |
         docker-compose build
 
-    - name: Start services
+    - name: Start services (Migrations, Tests)
       run: |
         docker-compose up -d
 
 
-    - name: Run migrations
-      run: |
-        docker-compose run django python manage.py migrate
+    # - name: Run migrations
+    #   run: |
+    #     docker-compose run django python manage.py migrate
 
-    - name: Run Tests
-      run: |
-        docker-compose run django pytest
+    # - name: Run Tests
+    #   run: |
+    #     docker-compose run django pytest
 
     - name: Stop and remove services
       if: always()
