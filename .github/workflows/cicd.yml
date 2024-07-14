@@ -79,7 +79,7 @@ jobs:
            script: |
               cd culinaryapp-api
               echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" > .env
-              echo "MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+              echo "MYSQL_DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
               docker compose down
               git pull
               docker compose up --detach
