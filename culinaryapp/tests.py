@@ -14,6 +14,8 @@ class DishViewSetTests(APITestCase):
         self.client.force_authenticate(user=self.user)
         self.dish = Dish.objects.create(title="Test Dish", profile=self.user.profile)
         self.url = reverse('dish-list')
+        token = self.user.auth_token.key
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
     def test_list_dishes(self):
         response = self.client.get(self.url)
@@ -54,6 +56,8 @@ class RatingViewSetTests(APITestCase):
         self.dish = Dish.objects.create(title="Test Dish", profile=self.user.profile)
         self.rating = Rating.objects.create(dish=self.dish, profile=self.user.profile, rating=5)
         self.url = reverse('rating-list', args=[self.dish.id])
+        token = self.user.auth_token.key
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
     def test_list_ratings(self):
         response = self.client.get(self.url)
@@ -73,6 +77,8 @@ class ExploreViewTests(APITestCase):
         self.client.force_authenticate(user=self.user)
         self.dish = Dish.objects.create(title="Test Dish", profile=self.user.profile)
         self.url = reverse('explore-list')
+        token = self.user.auth_token.key
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
     def test_explore_dishes(self):
         response = self.client.get(self.url)
