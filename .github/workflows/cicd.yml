@@ -45,3 +45,23 @@ jobs:
     - name: Run Tests
       run: |
          pytest
+
+  deploy:
+    name: deploy to digitalocean
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    steps: 
+      - name: deploy to Digitalocean
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+           host: ${{ secrets.SSH_HOST}}
+           username: ${{ secrets.SSH_USERNAME}}
+           key: ${{ secrets.SSH_PRIVATE_KEY}}
+
+           script: |
+             ssh root@207.154.236.26
+             cd django-cicd
+             docker compose down
+             git pull
+             docker compose up --detach
