@@ -4,6 +4,9 @@ services:
     ports:
       - 3306:3306
 
+    env_file:
+      - .env
+
     environment:
       - MYSQL_DATABASE=culinaryapp
       - MYSQL_ROOT_PASSWORD=${MYSQL_DB_PASSWORD}
