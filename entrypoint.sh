@@ -1,8 +1,8 @@
-#!/bin/sh
-
+#!/bin/bash
 
 python manage.py migrate
-python manage.py collecstatic
 
+pytest
 
+gunicorn --config gunicorn_config.py culinary_api.wsgi:application
 

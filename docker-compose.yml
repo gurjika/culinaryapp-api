@@ -13,7 +13,7 @@ services:
 
   django:
     build: .
-    command: ["./wait-for-it.sh", "db:3306", "--", "gunicorn", "--config", "gunicorn_config.py", "culinary_api.wsgi:application"]
+    command: ./wait-for-it.sh mysql:3306 -- ./entrypoint.sh
 
     # ports:
     #   - "8000:8000"
