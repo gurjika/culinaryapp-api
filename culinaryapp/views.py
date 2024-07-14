@@ -33,7 +33,7 @@ class DishViewSet(ModelViewSet):
     - `filter_backends`: Allows filtering dishes by title and tags.
     """
     
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
     queryset = Dish.objects. \
     prefetch_related('dish_ingredients__ingredient', 'dish_ingredients', 'dish_tags__tag'). \
     select_related('profile__user').prefetch_related('images').annotate(avg_rating=Avg('ratings__rating')).all()
