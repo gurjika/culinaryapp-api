@@ -25,7 +25,7 @@ CulinaryApp is a Django-based web application that allows users to create, manag
 
 ## Swagger Documentation
 
-To explore and test the API endpoints, visit the Swagger documentation at [http://localhost/swagger/schema](http://localhost/swagger/schema). This interactive documentation provides detailed information about each endpoint, including the expected request bodies, response formats, and query parameters.
+To explore and test the API endpoints, visit the Swagger documentation at [http://207.154.236.26/swagger/schema](http://207.154.236.26/swagger/schema). This interactive documentation provides detailed information about each endpoint, including the expected request bodies, response formats, and query parameters.
 
 ## Installation
 
