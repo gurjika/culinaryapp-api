@@ -24,7 +24,7 @@ load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/\
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django_development_key')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'culinary_api.wsgi.application'
 
 NAME = os.environ.get('NAME')
 HOST = os.environ.get('HOST', 'mysql')
-PASSWORD = os.environ.get('PASSWORD', 'Mypassword')
+PASSWORD = os.environ.get('DB_PASSWORD')
 USER = os.environ.get('USER')
 
 

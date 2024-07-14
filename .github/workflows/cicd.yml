@@ -58,6 +58,10 @@ jobs:
       run: |
         docker-compose down
 
+    env:
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      MYSQL_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
   deploy:
     name: deploy to digitalocean
     runs-on: ubuntu-latest
@@ -72,7 +76,10 @@ jobs:
            key: ${{ secrets.SSH_PRIVATE_KEY}}
 
            script: |
-             cd culinaryapp-api
-             docker compose down
-             git pull
-             docker compose up --detach
+              cd culinaryapp-api
+              echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" > .env
+              echo "MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+              docker compose down
+              git pull
+              docker compose up --detach
+

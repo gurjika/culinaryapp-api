@@ -6,7 +6,7 @@ services:
 
     environment:
       - MYSQL_DATABASE=culinaryapp
-      - MYSQL_ROOT_PASSWORD=Mypassword
+      - MYSQL_ROOT_PASSWORD=${MYSQL_DB_PASSWORD}
 
     volumes:
       - ../msqldata:/var/lib/mysql
@@ -23,6 +23,7 @@ services:
 
     environment:
       - DB_HOST=mysql
+      - MYSQL_DB_PASSWORD=${MYSQL_DB_PASSWORD}
 
     depends_on:
       - mysql
