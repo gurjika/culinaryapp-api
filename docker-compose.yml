@@ -24,6 +24,7 @@ services:
     environment:
       - DB_HOST=mysql
       - MYSQL_DB_PASSWORD=${MYSQL_DB_PASSWORD}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
 
     depends_on:
       - mysql
