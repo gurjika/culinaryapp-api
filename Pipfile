@@ -13,6 +13,7 @@ django-extensions = "*"
 requests = "*"
 drf-yasg = "*"
 django-filter = "*"
+pytest-django = "*"
 
 [dev-packages]
 python-dotenv = "*"

@@ -117,13 +117,13 @@ class RatingSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         
         try:
-            rating = Rating.objects.get(rater=self.context['user'].profile, dish_id=self.context['dish_pk'])
+            rating = Rating.objects.get(profile=self.context['user'].profile, dish_id=self.context['dish_pk'])
             rating.rating = validated_data['rating']
             rating.save()
         except Rating.DoesNotExist:
             rating = Rating.objects.create(
                 rating=validated_data['rating'], 
-                rater=self.context['user'].profile, 
+                profile=self.context['user'].profile, 
                 dish_id=self.context['dish_pk']
             )
                 
