@@ -36,18 +36,21 @@ jobs:
       run: |
         docker-compose build
 
-    - name: Start services (Migrations, Tests)
+    - name: Start services
       run: |
         docker-compose up -d
 
+    - name: Wait for MySQL to be ready
+      run: |
+        docker-compose exec -T mysql sh -c 'until mysqladmin ping -h"localhost" --silent; do echo "Waiting for MySQL..."; sleep 4; done'
 
-    # - name: Run migrations
-    #   run: |
-    #     docker-compose run django python manage.py migrate
+    - name: Run migrations
+      run: |
+        docker-compose run django python manage.py migrate
 
-    # - name: Run Tests
-    #   run: |
-    #     docker-compose run django pytest
+    - name: Run Tests
+      run: |
+        docker-compose run django pytest
 
     - name: Stop and remove services
       if: always()
