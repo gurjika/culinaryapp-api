@@ -54,3 +54,5 @@ jobs:
       run: |
         docker-compose down
 
+env:
+    PASSWORD: ${{ secrets.PASSWORD }}
