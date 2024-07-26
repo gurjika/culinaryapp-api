@@ -39,7 +39,7 @@ To explore and test the API endpoints, visit the Swagger documentation at [http:
     cd culinaryapp-api
     ```
 
-3. Create a `.env` file and specify the required environment variables:
+3. Create a `.env` file and specify the required environment variables (Also include AWS credentials):
     ```env
     PASSWORD=your_db_password
     HOST=mysql
