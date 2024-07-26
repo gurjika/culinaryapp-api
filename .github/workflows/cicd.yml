@@ -87,5 +87,5 @@ jobs:
               echo "AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }}" >> .env
               docker compose down
               git pull
-              docker compose up --detach
+              docker compose up --build --detach
 
