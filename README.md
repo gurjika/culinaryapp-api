@@ -9,19 +9,21 @@ CulinaryApp is a Django-based web application that allows users to create, manag
 - **Ingredient Management**: Users can add and remove ingredients for dishes.
 - **Image Upload**: Users can upload images for their dishes.
 - **Rating System**: Users can rate dishes.
-- **Explore Dishes**: Users can explore dishes based on their preferences.
 - **Favorite Dishes**: Users can add dishes to their favorites.
 - **Chef Profiles**: Users can view and add their favorite chefs.
+- **Explore Dishes**: Users can explore dishes based on their preferences.
 
 
 ## Tools and Technologies
 - **Django Rest Framework**: Provides a powerful and flexible toolkit for building Web APIs.
-- **Gunicorn**: A WSGI HTTP server for UNIX used to serve the Django application.
-- **Nginx**: A high-performance web server and reverse proxy server.
 - **MySQL**: A relational database management system used to store application data.
+- **Gunicorn**: A WSGI HTTP server for UNIX used to serve the Django application.
+
+- **Nginx**: A high-performance web server and reverse proxy server.
 - **Docker**: Containerization platform used to package the application and its dependencies.
 - **Docker Compose**: Tool for defining and running multi-container Docker applications.
 - **CI/CD**: Continuous Integration and Continuous Deployment processes for automating the testing and deployment of the application.
+- **S3 Bucket and CloudFront**: Used to host media files, leveraging S3 for storage and CloudFront for content delivery.
 
 ## Swagger Documentation
 
